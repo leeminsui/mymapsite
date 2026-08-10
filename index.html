@@ -3,33 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>송전망 경과지역 조회</title>
-    <!-- 지도 구현을 위한 Leaflet.js CSS -->
+    <title>송전망 경과지역 조회 및 주민 설문</title>
+    
+    <!-- Leaflet.js CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
     <style>
-        body { font-family: 'Malgun Gothic', sans-serif; text-align: center; margin: 0; padding: 20px; }
-        #map { height: 60vh; width: 100%; max-width: 800px; margin: 0 auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .btn { padding: 12px 24px; font-size: 16px; font-weight: bold; color: white; background-color: #007bff; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 20px; }
-        .btn:hover { background-color: #0056b3; }
+        /* 기본 레이아웃 설정 */
+        body { font-family: 'Malgun Gothic', sans-serif; margin: 0; padding: 0; display: flex; height: 100vh; background-color: #f8f9fa; color: #333; }
+        
+        /* 왼쪽 사이드바 메뉴 */
+        .sidebar { width: 250px; background-color: #2c3e50; color: white; padding: 20px 0; display: flex; flex-direction: column; flex-shrink: 0; }
+        .sidebar h2 { text-align: center; margin-bottom: 30px; font-size: 20px; border-bottom: 1px solid #4a627a; padding-bottom: 15px; margin-left: 20px; margin-right: 20px; }
+        .menu-btn { background: none; border: none; color: white; padding: 15px 25px; text-align: left; font-size: 16px; cursor: pointer; transition: 0.2s; border-left: 4px solid transparent; }
+        .menu-btn:hover { background-color: #34495e; }
+        .menu-btn.active { background-color: #34495e; border-left-color: #3498db; font-weight: bold; }
+        
+        /* 우측 메인 콘텐츠 영역 */
+        .content { flex-grow: 1; padding: 30px; overflow-y: auto; }
+        .section { display: none; max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .section.active { display: block; }
+        
+        /* 지도 섹션 스타일 */
+        #map { height: 60vh; width: 100%; border-radius: 8px; border: 1px solid #ddd; margin-top: 15px; }
+        .btn-primary { padding: 12px 24px; font-size: 16px; font-weight: bold; color: white; background-color: #0056b3; border: none; border-radius: 5px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .btn-primary:hover { background-color: #004494; }
+        
+        /* 설문조사 섹션 스타일 */
+        .survey-header { border-bottom: 2px solid #2c3e50; padding-bottom: 10px; margin-bottom: 20px; }
+        .survey-group { background-color: #f1f5f9; padding: 15px; border-radius: 8px; margin-bottom: 25px; }
+        .survey-group h3 { margin-top: 0; color: #1e40af; font-size: 18px; }
+        .question { margin-bottom: 20px; }
+        .question p { font-weight: bold; margin-bottom: 10px; font-size: 15px; }
+        .options label { display: block; margin-bottom: 8px; cursor: pointer; }
+        .text-input { width: 60%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px; }
+        textarea.text-input { width: 100%; height: 100px; resize: vertical; }
+        .submit-btn { width: 100%; padding: 15px; font-size: 18px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 20px; }
+        .submit-btn:hover { background-color: #218838; }
+
+        /* 지도 우측 하단 범례 */
+        .info-legend { padding: 10px 15px; font: 12px/1.5 'Malgun Gothic', sans-serif; background: rgba(255, 255, 255, 0.95); box-shadow: 0 0 15px rgba(0,0,0,0.3); border-radius: 8px; color: #333; max-height: 250px; overflow-y: auto; }
+        .info-legend h4 { margin: 0 0 8px; color: #111; font-size: 13px; text-align: center; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+        .highlight { color: #d32f2f; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <h2>송전망 경과지역 현황 및 내 위치</h2>
-    <button class="btn" id="find-me">현재 내 위치 확인하기</button>
-    <div id="map"></div>
+    <!-- 왼쪽 사이드바 -->
+    <div class="sidebar">
+        <h2>주민 참여 포털</h2>
+        <button class="menu-btn active" onclick="switchTab('mapTab')" id="btn-mapTab">📍 송전망 경과지 지도</button>
+        <button class="menu-btn" onclick="switchTab('surveyTab')" id="btn-surveyTab">📝 주민참여 설문조사</button>
+    </div>
 
-    <!-- 지도 구현을 위한 Leaflet.js 스크립트 -->
+    <!-- 우측 메인 콘텐츠 -->
+    <div class="content">
+        
+        <!-- 1. 지도 섹션 -->
+        <div id="mapTab" class="section active">
+            <h2>송전망 경과지역 현황 및 내 위치 전자파 확인</h2>
+            <button class="btn-primary" id="find-me">현재 내 위치 확인하기</button>
+            <div id="map"></div>
+        </div>
+
+        <!-- 2. 설문조사 섹션 -->
+        <div id="surveyTab" class="section">
+            <div class="survey-header">
+                <h2>Ⅲ. 설문 문항</h2>
+                <p style="color: #666; font-size: 14px;">본 설문은 노선·찬반·선호를 묻지 않으며, 지역 주민의 의견을 수렴하기 위한 3가지 항목으로 구성되어 있습니다.</p>
+            </div>
+
+            <form id="resident-survey">
+                <!-- ⓐ 회피 조건 -->
+                <div class="survey-group">
+                    <h3>ⓐ 회피 조건 — 무엇을 지켜야 하나</h3>
+                    
+                    <div class="question">
+                        <p>문 1. 우리 지역에서 송전선로가 반드시 피해야 한다고 생각하는 곳을 모두 골라 주십시오.</p>
+                        <div class="options">
+                            <label><input type="checkbox" name="q1" value="어린이집/학교"> 어린이집·학교 등 아이들이 모이는 곳</label>
+                            <label><input type="checkbox" name="q1" value="노약자시설"> 요양원·병원 등 노약자 시설</label>
+                            <label><input type="checkbox" name="q1" value="주택밀집"> 주택이 밀집한 마을 한가운데</label>
+                            <label><input type="checkbox" name="q1" value="식수원"> 상수원·취수장 등 식수원</label>
+                            <label><input type="checkbox" name="q1" value="생업터전"> 농경지·과수원 등 생업의 터전</label>
+                            <label><input type="checkbox" name="q1" value="문화재"> 문화재·경관 보호구역</label>
+                            <label><input type="checkbox" name="q1" value="기타"> 기타 <input type="text" class="text-input" style="width:200px;" name="q1_etc"></label>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <p>문 2. 문 1에서 고르신 곳 중, 가장 먼저 지켜야 할 곳 하나만 적어 주십시오.</p>
+                        <input type="text" class="text-input" name="q2" placeholder="예: 어린이집·학교"> 을(를) 가장 먼저 지켜야 합니다.
+                    </div>
+
+                    <div class="question">
+                        <p>문 3. 우리 지역에서 송전선로가 지나갈 때 가장 걱정되는 것은 무엇입니까? (가장 가까운 것 하나만 선택)</p>
+                        <div class="options">
+                            <label><input type="radio" name="q3" value="건강영향"> 건강 영향(전자파 등)</label>
+                            <label><input type="radio" name="q3" value="재산가치하락"> 재산 가치 하락</label>
+                            <label><input type="radio" name="q3" value="생업지장"> 농사·생업에 주는 지장</label>
+                            <label><input type="radio" name="q3" value="경관훼손"> 경관 훼손</label>
+                            <label><input type="radio" name="q3" value="안전"> 안전(화재·사고 등)</label>
+                            <label><input type="radio" name="q3" value="기타"> 기타 <input type="text" class="text-input" style="width:200px;" name="q3_etc"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ⓑ 수용 조건 -->
+                <div class="survey-group">
+                    <h3>ⓑ 수용 조건 — 어떤 조건이면 받아들일 수 있나</h3>
+                    
+                    <div class="question">
+                        <p>문 4. 다음 중 어떤 조치가 있으면 우려가 줄어들겠습니까?</p>
+                        <div class="options">
+                            <label><input type="checkbox" name="q4" value="지중화"> 민가 밀집 구간의 지중화(땅에 묻기)</label>
+                            <label><input type="checkbox" name="q4" value="이격거리"> 주거지와의 충분한 이격거리 확보</label>
+                            <label><input type="checkbox" name="q4" value="건강조사"> 공사 전·중 건강영향 조사와 결과 공개</label>
+                            <label><input type="checkbox" name="q4" value="전자파실측"> 정기적인 전자파 실측과 공개</label>
+                            <label><input type="checkbox" name="q4" value="사전안내"> 공사 일정·진행 상황의 사전 안내</label>
+                            <label><input type="checkbox" name="q4" value="기타"> 기타 <input type="text" class="text-input" style="width:200px;" name="q4_etc"></label>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <p>문 5. 위 조치 중 가장 중요하다고 생각하는 것 하나만 적어 주십시오.</p>
+                        <input type="text" class="text-input" name="q5" placeholder="예: 정기적인 전자파 실측과 공개"> 이(가) 가장 중요합니다.
+                    </div>
+
+                    <div class="question">
+                        <p>문 6. 사업이 진행된다면, 결정 과정에 대해 무엇이 가장 중요하다고 생각하십니까? (하나만 선택)</p>
+                        <div class="options">
+                            <label><input type="radio" name="q6" value="의견검토확인"> 내 의견이 실제로 검토되었는지 확인할 수 있는 것</label>
+                            <label><input type="radio" name="q6" value="결정투명성"> 결정의 근거와 기준이 투명하게 공개되는 것</label>
+                            <label><input type="radio" name="q6" value="충분한보상"> 충분한 보상</label>
+                            <label><input type="radio" name="q6" value="빠른마무리"> 결정이 빠르게 마무리되는 것</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ⓒ 인지 경로 -->
+                <div class="survey-group">
+                    <h3>ⓒ 인지 경로 — 어떻게 알게 됐나 (채널 검증)</h3>
+                    
+                    <div class="question">
+                        <p>문 7. 이 사업이 우리 지역과 관련 있다는 것을 언제 처음 아셨습니까?</p>
+                        <div class="options">
+                            <label><input type="radio" name="q7" value="1년이상전"> 1년 이상 전</label>
+                            <label><input type="radio" name="q7" value="몇달전"> 몇 달 전</label>
+                            <label><input type="radio" name="q7" value="최근한두달"> 최근 한두 달 사이</label>
+                            <label><input type="radio" name="q7" value="처음알았다"> 이 설문을 받고 처음 알았다</label>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <p>문 8. 이 사업을 처음 알게 된 경로는 무엇입니까?</p>
+                        <div class="options">
+                            <label><input type="radio" name="q8" value="한전안내문"> 한전이 보낸 안내문·우편</label>
+                            <label><input type="radio" name="q8" value="한전설명회"> 한전 설명회</label>
+                            <label><input type="radio" name="q8" value="언론보도"> 언론 보도</label>
+                            <label><input type="radio" name="q8" value="이웃"> 이웃·마을 사람</label>
+                            <label><input type="radio" name="q8" value="시민단체"> 주민 대책위·시민단체</label>
+                            <label><input type="radio" name="q8" value="기타"> 기타 <input type="text" class="text-input" style="width:200px;" name="q8_etc"></label>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <p>문 9. 앞으로 이 사업의 진행 상황을 어떤 방법으로 받아보고 싶으십니까?</p>
+                        <div class="options">
+                            <label><input type="checkbox" name="q9" value="전기요금고지서"> 전기요금 고지서에 동봉</label>
+                            <label><input type="checkbox" name="q9" value="우편물"> 우편물</label>
+                            <label><input type="checkbox" name="q9" value="문자메시지"> 문자 메시지</label>
+                            <label><input type="checkbox" name="q9" value="마을게시판"> 마을 게시판·관리사무소 게시</label>
+                            <label><input type="checkbox" name="q9" value="이통장"> 이·통장을 통해</label>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <p>문 10. 이 사업에 대해 한전에 묻고 싶은 것이 있으면 자유롭게 적어 주십시오.</p>
+                        <textarea class="text-input" name="q10" placeholder="자유롭게 의견을 작성해 주세요..."></textarea>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">설문조사 제출하기</button>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- 스크립트 모음 -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/@turf/turf/turf.min.js"></script>
     <script>
-        // 1. 지도 생성 (기본 위치: 대전 중심부)
+        // --- 탭 전환 로직 ---
+        function switchTab(tabId) {
+            // 모든 섹션과 버튼의 활성화 상태 해제
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // 선택한 탭 활성화
+            document.getElementById(tabId).classList.add('active');
+            document.getElementById('btn-' + tabId).classList.add('active');
+
+            // 지도가 숨겨져 있다가 나타날 때 깨지는 현상(회색 박스) 방지
+            if(tabId === 'mapTab' && map) {
+                setTimeout(() => { map.invalidateSize(); }, 100);
+            }
+        }
+
+        // --- 설문조사 제출 로직 ---
+        document.getElementById('resident-survey').addEventListener('submit', function(e) {
+            e.preventDefault(); // 페이지 새로고침 방지
+            alert('설문조사가 성공적으로 제출되었습니다. 소중한 의견 감사드립니다!');
+            this.reset(); // 폼 초기화
+            window.scrollTo(0, 0); // 화면 맨 위로 이동
+        });
+
+        // --- 지도 로직 (기존과 동일) ---
         var map = L.map('map').setView([36.3504, 127.3845], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // 2. 가상의 송전망 경과지역 데이터 (빨간색 영역으로 표시)
-        // 실제 프로젝트에서는 공공데이터포털 등에서 받은 GeoJSON 데이터를 여기에 넣습니다.
         var transmissionArea = {
             "type": "Feature",
             "properties": {"name": "가상의 154kV/345kV 경과지역"},
@@ -42,30 +236,82 @@
             }
         };
 
-        // 지도에 송전망 영역 렌더링
-        L.geoJSON(transmissionArea, {
-            style: function () { return {color: 'red', weight: 2, fillOpacity: 0.3}; }
-        }).bindPopup("송전선로 경과지역").addTo(map);
+        var polygonLayer = L.geoJSON(transmissionArea, {
+            style: function () { return {color: '#d32f2f', weight: 2, fillOpacity: 0.2}; }
+        }).addTo(map);
 
-        // 3. 내 위치 찾기 버튼 클릭 이벤트
+        var legend = L.control({position: 'bottomright'});
+        legend.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'info-legend');
+            div.innerHTML = `
+                <h4>생활 속 전자파 수치</h4>
+                전기오븐: 5.641<br>
+                헤어드라이기: 3.791<br>
+                전자레인지: 2.921<br>
+                가습기: 1.954<br>
+                전신안마기: 1.944<br>
+                인덕션쿠커: 0.619<br>
+                <span class="highlight">송전선로: 0.59</span><br>
+                전기장판: 0.518<br>
+                비데: 0.489<br>
+                IH압력밥솥: 0.475<br>
+                <span class="highlight">변전소: 0.26</span><br>
+                토스트기: 0.121<br>
+                청소기: 0.051<br>
+                에어컨: 0.05<br>
+                세탁기(드럼): 0.014<br>
+                TV(LCD): 0.01
+            `;
+            return div;
+        };
+        legend.addTo(map);
+
+        var userMarker = null;
+
         document.getElementById('find-me').addEventListener('click', function() {
-            // 브라우저가 위치 정보를 지원하는지 확인
             if (!navigator.geolocation) {
                 alert('사용 중인 브라우저가 위치 정보를 지원하지 않습니다.');
                 return;
             }
             
-            // 배민처럼 위치 정보 팝업 띄우기
             navigator.geolocation.getCurrentPosition(function(position) {
                 var lat = position.coords.latitude;
                 var lon = position.coords.longitude;
                 
-                // 내 위치로 지도 부드럽게 이동시키고 마커 찍기
-                map.flyTo([lat, lon], 15);
-                L.marker([lat, lon]).addTo(map)
-                    .bindPopup('현재 내 위치').openPopup();
+                if (userMarker) { map.removeLayer(userMarker); }
+
+                var userPt = turf.point([lon, lat]);
+                var isInside = turf.booleanPointInPolygon(userPt, transmissionArea);
+                
+                var distanceMeters = 0;
+                var estimatedEMF = 0;
+
+                if (isInside) {
+                    distanceMeters = 0;
+                    estimatedEMF = 0.59;
+                } else {
+                    var polyLine = turf.polygonToLine(transmissionArea);
+                    var distanceKm = turf.pointToLineDistance(userPt, polyLine);
+                    distanceMeters = Math.round(distanceKm * 1000);
+                    
+                    if (distanceMeters < 50) estimatedEMF = 0.4;
+                    else if (distanceMeters < 100) estimatedEMF = 0.1;
+                    else if (distanceMeters < 300) estimatedEMF = 0.02;
+                    else estimatedEMF = 0;
+                }
+
+                var popupContent = `
+                    <div style="text-align:center;">
+                        <b>현재 내 위치</b><br><hr style="margin:5px 0;">
+                        경과지역과의 거리: <b>${distanceMeters}m</b><br>
+                        예상 전자파 수치: <b>${estimatedEMF > 0 ? estimatedEMF + ' µT' : '0.01 µT 이하<br>(자연상태 수준)'}</b>
+                    </div>
+                `;
+
+                map.flyTo([lat, lon], 14);
+                userMarker = L.marker([lat, lon]).addTo(map).bindPopup(popupContent).openPopup();
             }, function() {
-                alert('위치 정보를 가져올 수 없습니다. 위치 정보 접근 권한을 허용해주세요.');
+                alert('위치 정보를 가져올 수 없습니다. 권한을 허용해주세요.');
             });
         });
     </script>
