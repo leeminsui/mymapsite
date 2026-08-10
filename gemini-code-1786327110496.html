@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>송전망 경과지역 조회</title>
+    <!-- 지도 구현을 위한 Leaflet.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { font-family: 'Malgun Gothic', sans-serif; text-align: center; margin: 0; padding: 20px; }
+        #map { height: 60vh; width: 100%; max-width: 800px; margin: 0 auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .btn { padding: 12px 24px; font-size: 16px; font-weight: bold; color: white; background-color: #007bff; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 20px; }
+        .btn:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <h2>송전망 경과지역 현황 및 내 위치</h2>
+    <button class="btn" id="find-me">현재 내 위치 확인하기</button>
+    <div id="map"></div>
+
+    <!-- 지도 구현을 위한 Leaflet.js 스크립트 -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // 1. 지도 생성 (기본 위치: 대전 중심부)
+        var map = L.map('map').setView([36.3504, 127.3845], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // 2. 가상의 송전망 경과지역 데이터 (빨간색 영역으로 표시)
+        // 실제 프로젝트에서는 공공데이터포털 등에서 받은 GeoJSON 데이터를 여기에 넣습니다.
+        var transmissionArea = {
+            "type": "Feature",
+            "properties": {"name": "가상의 154kV/345kV 경과지역"},
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[
+                    [127.370, 36.360], [127.390, 36.370], [127.400, 36.350], 
+                    [127.380, 36.340], [127.370, 36.360]
+                ]]
+            }
+        };
+
+        // 지도에 송전망 영역 렌더링
+        L.geoJSON(transmissionArea, {
+            style: function () { return {color: 'red', weight: 2, fillOpacity: 0.3}; }
+        }).bindPopup("송전선로 경과지역").addTo(map);
+
+        // 3. 내 위치 찾기 버튼 클릭 이벤트
+        document.getElementById('find-me').addEventListener('click', function() {
+            // 브라우저가 위치 정보를 지원하는지 확인
+            if (!navigator.geolocation) {
+                alert('사용 중인 브라우저가 위치 정보를 지원하지 않습니다.');
+                return;
+            }
+            
+            // 배민처럼 위치 정보 팝업 띄우기
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var lat = position.coords.latitude;
+                var lon = position.coords.longitude;
+                
+                // 내 위치로 지도 부드럽게 이동시키고 마커 찍기
+                map.flyTo([lat, lon], 15);
+                L.marker([lat, lon]).addTo(map)
+                    .bindPopup('현재 내 위치').openPopup();
+            }, function() {
+                alert('위치 정보를 가져올 수 없습니다. 위치 정보 접근 권한을 허용해주세요.');
+            });
+        });
+    </script>
+</body>
+</html>
