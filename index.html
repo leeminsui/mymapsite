@@ -115,6 +115,114 @@
 @media(max-width:850px){.mapGrid,.gpsResultGrid{grid-template-columns:1fr}#realMap{height:470px!important;min-height:470px!important}}
 </style>
 
+
+<style id="emf-compare-style">
+/* ── 전체폭 큰 지도 ── */
+.mapWide{margin-top:16px}
+#realMap{display:block!important;width:100%!important;height:760px!important;min-height:760px!important;
+ background:#e8eef5;border:1px solid #bdcce0;border-radius:16px;overflow:hidden;position:relative;z-index:1}
+
+/* ── 지도 상단 ‘미확정’ 배너 ── */
+.corridorBanner{position:absolute;top:12px;left:14px;z-index:640;max-width:min(560px,calc(100% - 355px));
+ background:rgba(183,28,28,.95);color:#fff;border-radius:12px;padding:12px 20px;
+ box-shadow:0 4px 18px rgba(0,0,0,.32);pointer-events:none}
+.corridorBanner b{display:block;font-size:19px;font-weight:950;line-height:1.35;letter-spacing:-.2px;white-space:nowrap}
+.corridorBanner small{display:block;font-size:13.5px;font-weight:700;opacity:.93;margin-top:3px;white-space:nowrap}
+
+/* ── 지도 안 오버레이 패널 ── */
+.emfOv{position:absolute;right:14px;z-index:650;width:345px;
+ background:rgba(255,255,255,.97);border:1px solid #cddbe8;border-radius:15px;
+ box-shadow:0 8px 28px rgba(15,40,70,.22);overflow:hidden;backdrop-filter:blur(3px)}
+.emfOvTop{top:14px;max-height:calc(100% - 250px);display:flex;flex-direction:column}
+.emfOvBottom{bottom:26px}
+.emfOvHead{padding:10px 14px;border-bottom:1px solid #e3ebf3;background:linear-gradient(135deg,#f5faff,#e9f3fd);
+ font-size:14px;font-weight:900;color:var(--blue);flex:0 0 auto}
+.emfOvBody{padding:11px;overflow-y:auto}
+.emfOvBody::-webkit-scrollbar{width:6px}
+.emfOvBody::-webkit-scrollbar-thumb{background:#c9d6e4;border-radius:3px}
+.emfIdle{padding:18px 8px;text-align:center;color:var(--muted);font-weight:750;line-height:1.7;font-size:13.5px}
+
+/* ── 측정될 값 (우측 하단) ── */
+.emfHero{padding:4px 4px 2px}
+.emfHero small{display:block;font-size:12.5px;font-weight:850;color:var(--muted);margin-bottom:4px;
+ white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.emfHero .emfVal{font-size:34px;font-weight:950;line-height:1.05;color:var(--blue);letter-spacing:-.5px}
+.emfHero .emfDist{margin-top:6px;font-size:13px;font-weight:800;color:#33475f;line-height:1.5}
+.emfHero .emfPct{margin-top:7px;padding-top:8px;border-top:1px dashed #c9dcee;
+ font-size:12.5px;font-weight:800;color:var(--muted);line-height:1.5}
+.emfHero .emfPct b{color:#0d47a1}
+.emfLoading{padding:14px 6px;text-align:center;font-size:13.5px;font-weight:800;color:var(--blue)}
+.emfError{padding:12px 8px;font-size:13px;font-weight:800;color:#b3261e;line-height:1.6}
+
+/* ── 가전제품 비교 (우측 상단) ── */
+.emfAppGrid{display:grid;grid-template-columns:1fr;gap:7px}
+.emfApp{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:11px;padding:8px 10px;background:#fff}
+.emfAppIcon{flex:0 0 auto;width:40px;height:40px;border-radius:10px;background:#f4f8fc;
+ display:flex;align-items:center;justify-content:center;border:1px solid #e6eef6}
+.emfAppIcon svg{width:29px;height:29px;display:block}
+.emfAppText{min-width:0;flex:1 1 auto}
+.emfAppName{font-size:18.5px;font-weight:900;color:#16212f;line-height:1.25;
+ white-space:nowrap;letter-spacing:-.2px}
+.emfAppVal{font-size:12px;color:var(--muted);font-weight:750;margin-top:1px;white-space:nowrap}
+.emfAppRatio{flex:0 0 auto;text-align:right;padding-left:2px}
+.emfAppRatio b{display:block;font-size:19px;font-weight:950;line-height:1.1;white-space:nowrap}
+.emfAppRatio small{font-size:10.5px;color:var(--muted);font-weight:700;white-space:nowrap}
+.emfLimitRow{border:2px solid #f0b8b3;background:linear-gradient(135deg,#fff6f5,#fdecea);
+ box-shadow:0 2px 8px rgba(198,40,40,.09)}
+.emfLimitRow .emfAppIcon{background:#fff;border-color:#f2c4bf}
+.emfLimitRow .emfAppName{color:#a51e1e}
+.emfLimitRow .emfAppVal{color:#b4534e}
+
+/* ── 접이식 사업개요 · 출처 ── */
+.sideInfo{margin-top:14px;border:1px solid var(--line);border-radius:12px;background:#f9fbfd;overflow:hidden}
+.sideInfo>summary,.emfMore>summary{cursor:pointer;list-style:none;padding:11px 14px;font-size:13.5px;font-weight:850;color:var(--blue)}
+.sideInfo>summary::-webkit-details-marker,.emfMore>summary::-webkit-details-marker{display:none}
+.sideInfo>summary::after,.emfMore>summary::after{content:'\25BE';float:right;transition:transform .2s}
+.sideInfo[open]>summary::after,.emfMore[open]>summary::after{transform:rotate(180deg)}
+.sideInfoBody{padding:0 14px 14px;font-size:13px;line-height:1.7}
+.sideInfoBody p{margin:6px 0}
+.sideInfoBody hr{border:0;border-top:1px solid #e3eaf2;margin:11px 0}
+.emfMore{border:1px solid var(--line);border-radius:11px;background:#fff;overflow:hidden}
+.emfMoreBody{padding:0 13px 13px;font-size:12.5px;line-height:1.75;color:#42566e}
+.emfMoreBody code{background:#f4f8fc;border:1px solid #dde5ee;border-radius:4px;padding:1px 6px;font-size:12px;font-weight:800;color:#0754a6}
+.emfMoreBody ul{margin:6px 0 0;padding-left:18px}
+.emfMoreBody li{margin:3px 0}
+.emfMoreBody a{color:#0754a6;font-weight:800;word-break:break-all}
+.emfMoreBody hr{border:0;border-top:1px solid #e3eaf2;margin:10px 0}
+
+/* ── 좋은 화면/작은 화면 ── */
+@media(max-width:1100px){.emfOv{width:305px}.emfOvTop{max-height:calc(100% - 235px)}
+ .corridorBanner{max-width:calc(100% - 300px);padding:10px 15px}.corridorBanner b{font-size:16.5px}.corridorBanner small{font-size:12.5px}}
+@media(max-width:820px){
+ #realMap{height:440px!important;min-height:440px!important}
+ .emfOv{position:static;width:auto;margin-top:12px;box-shadow:0 3px 14px rgba(15,40,70,.09);max-height:none}
+ .emfOvTop{display:block}
+ .emfOvBody{max-height:none}
+ .corridorBanner{max-width:calc(100% - 24px);left:12px;right:12px;padding:9px 13px}.corridorBanner b{font-size:15px;white-space:normal}.corridorBanner small{font-size:12px;white-space:normal}
+ .mapWide{display:flex;flex-direction:column}
+ .emfOvBottom{order:-1}
+}
+</style>
+
+
+<style id="locale-filter-style">
+.localeBar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+ margin:18px 0 6px;padding:14px 17px;border-radius:13px;
+ background:linear-gradient(135deg,#f5faff,#eaf3fd);border:1px solid #cfe0f2}
+.localeMsg{font-size:14.5px;font-weight:750;color:#2b4058;line-height:1.6;flex:1;min-width:240px}
+.localeMsg b{color:var(--blue)}
+.localeBar.located{background:linear-gradient(135deg,#f2fbf4,#e6f6ea);border-color:#bfe3c8}
+.localeBar.located .localeMsg b{color:#1b7a3a}
+.localeActs{display:flex;gap:8px;flex-wrap:wrap}
+.localeBtn{border:1px solid var(--blue);background:var(--blue);color:#fff;border-radius:10px;
+ padding:9px 14px;font-size:13.5px;font-weight:850;cursor:pointer;white-space:nowrap}
+.localeBtn.ghost{background:#fff;color:var(--blue)}
+.localeBtn:hover{opacity:.9}
+.regionNav button.nearby{border-color:#9fc7ec}
+.regionNav button .navDist{display:block;font-size:11px;font-weight:700;opacity:.75;margin-top:1px}
+.regionNav button.active .navDist{opacity:.9}
+@media(max-width:700px){.localeActs{width:100%}.localeBtn{flex:1}}
+</style>
 </head>
 <body>
 <header><div class="head"><div class="logo"><span class="hubMark">⚡</span><span>주민참여형 전력소통 허브</span><img class="kepcoLogo" src="data:image/jpeg;base64,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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH/2Q==" alt="한국전력공사 KEPCO"></div><nav class="nav"><a href="#status">사업현황</a><a href="#participation">참여과정</a><a href="#impact">우리 집 영향</a><a href="#survey">질문조사</a><a href="#opinion">주민의견</a><a href="#news">사업소식</a></nav></div></header>
@@ -137,11 +245,27 @@
 
   <div class="corridorStatus" id="corridorStatus">Leaflet + OpenStreetMap 지도를 불러오는 중입니다…</div>
 
-  <div class="mapGrid">
-    <div id="realMap"></div>
-    <div class="side">
-      <h3>⚡ 345kV 신계룡–북천안 송전선로</h3>
-      <p><b>사업 방향</b><br>신계룡변전소 → 대전 → 공주·세종 → 청주 → 천안 동면 북천안변전소</p>
+  <div class="mapWide">
+    <div id="realMap">
+      <div class="emfOv emfOvTop" id="emfOvTop">
+        <div class="emfOvHead">🏠 집 안 가전제품과 비교</div>
+        <div class="emfOvBody" id="emfAppBody">
+          <div class="emfIdle">위치를 조회하면<br>비교해 보여드립니다</div>
+        </div>
+      </div>
+      <div class="emfOv emfOvBottom" id="emfOvBottom">
+        <div class="emfOvBody" id="emfValueBody">
+          <div class="emfIdle">📍 <b>내 위치 확인</b>을 누르세요</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <details class="sideInfo">
+    <summary>⚡ 사업 개요 · 지도 범례</summary>
+    <div class="sideInfoBody">
+      <p><b>345kV 신계룡–북천안 송전선로</b><br>
+      신계룡변전소 → 대전 → 공주·세종 → 청주 → 천안 동면 북천안변전소</p>
       <div class="mapLegend">
         <p><span class="legendSwatch corridorSwatch"></span><b>공개자료 기반 최적경과대역</b></p>
         <p><span class="legendDot myDot"></span>현재 위치</p>
@@ -150,9 +274,12 @@
       <hr>
       <p><b>신계룡변전소</b><br><span id="sgStatus">공개 지도에서 위치 확인 중</span></p>
       <p><b>북천안변전소 후보지</b><br>천안시 동면 광덕리 305 일원<br><span id="bcStatus">정확한 GPS 좌표 위치 확인 중</span></p>
-      <button class="btn secondary emfPopupButton" type="button" onclick="openEmfInfo()">전자파 정보 보기</button>
+      <hr>
+      <details class="emfMore"><summary>전자파 계산식 · 주의사항 · 출처</summary>
+        <div class="emfMoreBody" id="emfSourceBody"></div>
+      </details>
     </div>
-  </div>
+  </details>
 
   <div class="gpsResultGrid">
     <div class="gpsCard"><small>📍 현재 위치</small><strong id="gpsCurrent">GPS 확인 전</strong></div>
@@ -162,10 +289,6 @@
 
   <div class="gpsSentence" id="gpsSentence">📍 내 위치 확인을 누르면 현재 위치에서 공개된 최적경과대역까지의 최단거리를 계산합니다.</div>
 
-  <div class="emfInline">
-    <b>📡 전자파 정보</b>
-    <p>현재 위치의 GPS 정보만으로 실제 전자파 세기를 측정할 수 없습니다.</p>
-  </div>
 
   <blockquote class="mapDisclaimer">본 지도는 공개된 신계룡–북천안 345kV 송전선로 최적경과대역 정보를 주민의 이해를 돕기 위해 시각화한 것입니다. 실제 송전탑 위치 및 최종 송전선로 경과지를 의미하지 않습니다.</blockquote>
 </div>
@@ -177,7 +300,14 @@
 </style>
 
 
-<section class="status" id="status"><div class="wrap"><div class="title"><h2>지역별 송변전 건설 사업현황</h2><p>전국 송변전 건설사업은 4단계로 확인하고, 아래 지역 탭에서는 신계룡–북천안 사업의 지역별 설명회·주민소통 이력을 한눈에 확인할 수 있습니다.</p></div>
+<section class="status" id="status"><div class="wrap"><div class="title"><h2 id="statusTitle">📍 우리 동네 송전사업 현황</h2><p id="statusLead">위를에서 내 위치를 조회하면, 그 지역에 해당하는 사업의 설명회·주민소통 이력만 골라서 보여드립니다.</p></div>
+<div class="localeBar" id="localeBar">
+  <div class="localeMsg" id="localeMsg">📍 아직 위치를 확인하지 않았습니다. 지도에서 <b>내 위치 확인</b>을 누르면 해당 지역 사업만 표시됩니다.</div>
+  <div class="localeActs">
+    <button class="localeBtn" type="button" onclick="document.getElementById('impact').scrollIntoView({behavior:'smooth'})">지도로 이동</button>
+    <button class="localeBtn ghost" id="localeAllBtn" type="button" onclick="toggleAllRegions()">전체 지역 보기</button>
+  </div>
+</div>
 <div class="stageCards" id="stageCards"></div>
 <div class="stageDetail"><div class="stageDetailHead"><div><small id="stageSelectedLabel">선택 단계</small><h3 id="stageSelectedTitle">계획확정 – 사업승인 전</h3><p id="stageSelectedDesc" style="color:var(--muted);margin:0"></p></div><a id="stageOfficial" class="officialBtn" href="https://www.kepco.co.kr/home/disclosure/transdisclosure/transstatus/transinfo.do" target="_blank" rel="noopener">한전 원문 보기 ↗</a></div><div style="overflow:auto"><table class="projectTable"><thead><tr><th>사업명</th><th>설비종류</th><th>담당본부</th><th>담당사업소</th><th>상세</th></tr></thead><tbody id="stageProjectTable"></tbody></table></div><div class="sourceNote">전국 건수·4단계 정의는 한국전력공사 송변전 건설 정보공개 플랫폼의 현재 공개 화면을 기준으로 표시했습니다. 현재 확인되는 건수는 <b>444 / 189 / 202 / 14건</b>이며, 페이지가 갱신되면 수치도 달라질 수 있습니다.</div></div>
 <div class="regionNav" id="regionNav"></div><div class="regionSummary"><div><small>선택 지역</small><h3 id="selectedRegionName">대전 유성구</h3></div><div><small>신계룡–북천안 연결 사업</small><h3 id="regionProjectCount">0건</h3></div><div><small>정보 기준</small><h3>월별 갱신</h3></div></div><div class="projectSelector" id="projectSelector"></div><div class="caseHead"><div><small id="caseRegion">대표 사업</small><h2 id="caseTitle">사업을 선택해 주세요</h2><p id="caseStatus"></p></div><span class="badge new" id="caseBadge">진행 중</span></div><div class="historyGrid"><div class="historyBox"><h3>사업 추진 경과</h3><div class="historyTimeline" id="committeeTimeline"></div></div><div class="historyBox"><h3>마을별 설명회·공청회 이력</h3><div class="villageTabs" id="villageTabs"></div><div id="villageHistory"></div></div></div><div class="historyBox" style="margin-top:17px"><h3>향후 사업 일정</h3><div id="futureSchedule" style="overflow:auto"></div></div></div></section>
@@ -273,7 +403,83 @@ const projects={
 })]
 };
 let selectedRegion='대전 유성구',selectedProject=0;
-function initRegions(){document.getElementById('regionNav').innerHTML=regionOrder.map(r=>`<button class="${r===selectedRegion?'active':''}" onclick="selectRegion('${r}',this)">${r}</button>`).join('');renderRegion()}
+/* 지역 대표 좌표 (시·구청 기준) */
+const regionCoords={
+ '대전 유성구':[36.3624,127.3562],
+ '대전 서구':[36.3220,127.3838],
+ '세종':[36.4800,127.2890],
+ '계룡':[36.2745,127.2486],
+ '공주':[36.4465,127.1190],
+ '논산':[36.1872,127.0987],
+ '천안':[36.8151,127.1139],
+ '청주':[36.6424,127.4890]
+};
+var userRegionInfo=null;   // {region, km, list:[{r,km}]}
+var showAllRegions=false;
+
+function regionDistances(lat,lon){
+ return regionOrder.map(function(r){
+   var c=regionCoords[r];
+   return {r:r, km:(c?haversineKm(lat,lon,c[0],c[1]):9999)};
+ }).sort(function(a,b){return a.km-b.km});
+}
+
+/* 위치 조회 결과로 지역을 자동 선택 */
+function applyRegionByLocation(lat,lon,label){
+ var list=regionDistances(lat,lon);
+ userRegionInfo={region:list[0].r, km:list[0].km, list:list, label:label};
+ showAllRegions=false;
+ selectedRegion=list[0].r;
+ selectedProject=0;
+ initRegions();
+}
+
+function toggleAllRegions(){
+ showAllRegions=!showAllRegions;
+ initRegions();
+}
+
+function initRegions(){
+ var nav=document.getElementById('regionNav');
+ var bar=document.getElementById('localeBar');
+ var msg=document.getElementById('localeMsg');
+ var allBtn=document.getElementById('localeAllBtn');
+ var lead=document.getElementById('statusLead');
+ var list;
+
+ if(userRegionInfo && !showAllRegions){
+   /* 내 위치 주변 지역만 — 가장 가까운 곳 + 25km 이내 인접 지역 */
+   list=userRegionInfo.list.filter(function(x,i){ return i===0 || x.km<=25; }).slice(0,3);
+   bar.classList.add('located');
+   msg.innerHTML='📍 현재 위치 기준으로 <b>'+userRegionInfo.region+'</b> 사업을 보여드립니다.'
+     + (list.length>1 ? ' 가까운 인접 지역도 함께 표시됩니다.' : '');
+   allBtn.textContent='전체 지역 보기';
+   if(lead) lead.textContent='내 위치와 관련된 사업만 추려서 보여드립니다. 설명회·주민소통 이력과 앞으로의 일정을 확인하세요.';
+ }else{
+   list=regionOrder.map(function(r){return {r:r,km:null}});
+   bar.classList.remove('located');
+   if(userRegionInfo){
+     msg.innerHTML='🗺️ 전체 지역을 보고 있습니다. 내 위치는 <b>'+userRegionInfo.region+'</b> 입니다.';
+     allBtn.textContent='내 지역만 보기';
+   }else{
+     msg.innerHTML='📍 아직 위치를 확인하지 않았습니다. 지도에서 <b>내 위치 확인</b>을 누르면 해당 지역 사업만 표시됩니다.';
+     allBtn.textContent='전체 지역 보기';
+   }
+   if(lead) lead.textContent='위에서 내 위치를 조회하면, 그 지역에 해당하는 사업의 설명회·주민소통 이력만 골라서 보여드립니다.';
+ }
+
+ if(list.length && !list.some(function(x){return x.r===selectedRegion})){
+   selectedRegion=list[0].r; selectedProject=0;
+ }
+
+ nav.innerHTML=list.map(function(x){
+   var d = (x.km!==null && x.km!==undefined)
+     ? '<span class="navDist">약 '+(x.km<1?Math.round(x.km*1000)+'m':x.km.toFixed(1)+'km')+'</span>' : '';
+   return '<button class="'+(x.r===selectedRegion?'active ':'')+(x.km!==null?'nearby':'')+'" '
+        + 'onclick="selectRegion(\''+x.r+'\',this)">'+x.r+d+'</button>';
+ }).join('');
+ renderRegion();
+}
 function selectRegion(r,el){selectedRegion=r;selectedProject=0;document.querySelectorAll('#regionNav button').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderRegion()}
 function renderRegion(){const arr=projects[selectedRegion]||[];document.getElementById('selectedRegionName').textContent=selectedRegion;document.getElementById('regionProjectCount').textContent=arr.length+'건';document.getElementById('projectSelector').innerHTML=arr.map((p,i)=>`<button class="projectSelect ${i===selectedProject?'active':''}" onclick="chooseProject(${i},this)"><small>${p.stage}</small><h3>${p.name}</h3><p>${p.desc}</p></button>`).join('');renderProject()}
 function chooseProject(i,el){selectedProject=i;document.querySelectorAll('.projectSelect').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderProject()}
@@ -327,6 +533,12 @@ function initMap(){
  });
  map.fitBounds(bounds,{padding:[25,25]});
  document.getElementById('corridorStatus').textContent='공개자료 기반 최적경과대역 32개 지역 표시 완료 · 실제 송전탑/최종 노선은 표시하지 않습니다.';
+ if(!document.getElementById('corridorBanner')){
+   var bn=document.createElement('div');
+   bn.id='corridorBanner'; bn.className='corridorBanner';
+   bn.innerHTML='<b>아직 확정된 노선이 아닙니다</b><small>최적경과대역 후보 범위입니다.</small>';
+   document.getElementById('realMap').appendChild(bn);
+ }
  document.getElementById('sgStatus').textContent='계룡시 두마면 부근 · 정확한 설비 좌표는 표시하지 않음';
  document.getElementById('bcStatus').textContent='천안시 동면 광덕리 305 일원 · 정확한 설비 좌표 위치 확인 필요';
  setTimeout(function(){map.invalidateSize(true)},80);
@@ -347,70 +559,100 @@ function nearestCorridor(lat,lon){
  corridorPoints.forEach(function(p){
    var centerKm=haversineKm(lat,lon,p[1],p[2]);
    var edgeKm=Math.max(0,centerKm-4.5);
-   if(!best||edgeKm<best.distance)best={distance:edgeKm,lat:p[1],lon:p[2],name:p[0]};
+   if(!best||edgeKm<best.distance)best={distance:edgeKm,centerKm:centerKm,lat:p[1],lon:p[2],name:p[0]};
  });
  return best;
 }
 
+var emfBusy=false;
+
+/* 공통 결과 반영: 지도·카드·오버레이를 한 번에 갱신 */
+function applyLocation(lat, lon, label, popupHtml, sentencePrefix){
+ if(!map) initMap();
+ if(userMarker) map.removeLayer(userMarker);
+ userMarker=L.marker([lat,lon]).addTo(map).bindPopup(popupHtml).openPopup();
+ map.flyTo([lat,lon],13,{animate:true,duration:.45});
+
+ var n=nearestCorridor(lat,lon);
+ nearestLatLng=[n.lat,n.lon];
+ var d=formatDistance(n.distance);
+
+ document.getElementById('gpsCurrent').textContent=label;
+ document.getElementById('gpsDistance').textContent=d;
+ document.getElementById('zoomNearest').disabled=false;
+ document.getElementById('gpsSentence').textContent = n.distance===0
+   ? sentencePrefix+'은(는) 공개자료 기반 최적경과대역 표시 범위 안에 있습니다.'
+   : sentencePrefix+'에서 신계룡–북천안 최적경과대역까지 약 '+d+' 떨어져 있습니다.';
+
+ try{ applyRegionByLocation(lat, lon, label); }
+ catch(e){ console.error('지역 필터 오류:',e); }
+
+ try{ updateEmfFromNearest(n, label); }
+ catch(e){ console.error('전자파 계산 오류:',e); emfSetError('전자파 계산 중 오류가 발생했습니다.'); }
+ return n;
+}
+
 async function searchLocation(){
+ if(emfBusy) return;
  var input=document.getElementById('locationSearchInput');
  var q=input?input.value.trim():'';
- if(!q){alert('주소 또는 장소를 입력해 주세요.');return;}
- if(!map)initMap();
+ if(!q){ alert('주소 또는 장소를 입력해 주세요.'); return; }
+ if(!map) initMap();
+
+ emfBusy=true;
+ if(input) input.disabled=true;
+ emfSetLoading('‘'+q+'’ 위치를 찾는 중입니다…');
+
  try{
-   if(input)input.disabled=true;
-   var res=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=kr&q='+encodeURIComponent(q),{headers:{'Accept':'application/json'}});
-   if(!res.ok)throw new Error('search failed');
+   var url='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=kr'
+           +'&q='+encodeURIComponent(q)+'&_='+Date.now();   // 캐시 회피
+   var res=await fetch(url,{headers:{'Accept':'application/json'},cache:'no-store'});
+   if(res.status===429||res.status===403){
+     emfSetError('짧은 시간에 너무 여러 번 검색했습니다. 잠시 후 다시 시도해 주세요.');
+     return;
+   }
+   if(!res.ok) throw new Error('HTTP '+res.status);
    var data=await res.json();
-   if(!data.length){alert('검색 결과를 찾지 못했습니다. 주소를 조금 더 자세히 입력해 주세요.');return;}
-   var lat=parseFloat(data[0].lat),lon=parseFloat(data[0].lon);
-   if(userMarker)map.removeLayer(userMarker);
-   userMarker=L.marker([lat,lon]).addTo(map).bindPopup('<b>🔎 검색 위치</b><br>'+data[0].display_name).openPopup();
-   map.flyTo([lat,lon],13,{animate:true,duration:.45});
-   document.getElementById('gpsCurrent').textContent=data[0].display_name;
-   var n=nearestCorridor(lat,lon);
-   nearestLatLng=[n.lat,n.lon];
-   var d=formatDistance(n.distance);
-   document.getElementById('gpsDistance').textContent=d;
-   document.getElementById('zoomNearest').disabled=false;
-   document.getElementById('gpsSentence').textContent=n.distance===0
-     ? '검색한 위치는 공개자료 기반 최적경과대역 표시 범위 안에 있습니다.'
-     : '검색한 위치에서 신계룡–북천안 최적경과대역까지 약 '+d+' 떨어져 있습니다.';
+   if(!data.length){
+     emfSetError('‘'+q+'’ 검색 결과를 찾지 못했습니다. 조금 더 자세히 입력해 주세요.');
+     return;
+   }
+   var lat=parseFloat(data[0].lat), lon=parseFloat(data[0].lon);
+   var shortName=String(data[0].display_name||q).split(',')[0].trim();
+   applyLocation(lat, lon, shortName,
+     '<b>🔎 검색 위치</b><br>'+data[0].display_name,
+     '검색한 위치');
  }catch(e){
-   alert('위치 검색 중 오류가 발생했습니다. 인터넷 연결을 확인한 뒤 다시 시도해 주세요.');
+   console.error('위치 검색 오류:',e);
+   emfSetError('위치 검색에 실패했습니다. 인터넷 연결을 확인한 뒤 다시 시도해 주세요.');
  }finally{
-   if(input)input.disabled=false;
+   emfBusy=false;
+   if(input) input.disabled=false;
  }
 }
 function useGPS(){
- if(!map)initMap();
- if(!navigator.geolocation){
-   alert('이 브라우저는 위치 확인 기능을 지원하지 않습니다.');return;
- }
- document.getElementById('gpsCurrent').textContent='GPS 확인 중…';
- navigator.geolocation.getCurrentPosition(function(pos){
-   var lat=pos.coords.latitude,lon=pos.coords.longitude;
-   if(userMarker)map.removeLayer(userMarker);
-   userMarker=L.marker([lat,lon]).addTo(map).bindPopup('<b>📍 현재 위치</b>').openPopup();
-   map.flyTo([lat,lon],13,{animate:true,duration:.45});
-   document.getElementById('gpsCurrent').textContent=lat.toFixed(5)+', '+lon.toFixed(5);
+ if(emfBusy) return;
+ if(!map) initMap();
+ if(!navigator.geolocation){ alert('이 브라우저는 위치 확인 기능을 지원하지 않습니다.'); return; }
 
-   var n=nearestCorridor(lat,lon);
-   nearestLatLng=[n.lat,n.lon];
-   var d=formatDistance(n.distance);
-   document.getElementById('gpsDistance').textContent=d;
-   document.getElementById('zoomNearest').disabled=false;
-   document.getElementById('gpsSentence').textContent=
-     n.distance===0
-     ? '현재 위치는 공개자료 기반 최적경과대역 표시 범위 안에 있습니다.'
-     : '현재 위치에서 신계룡–북천안 최적경과대역까지 약 '+d+' 떨어져 있습니다.';
+ emfBusy=true;
+ document.getElementById('gpsCurrent').textContent='GPS 확인 중…';
+ emfSetLoading('현재 위치를 확인하는 중입니다…');
+
+ navigator.geolocation.getCurrentPosition(function(pos){
+   emfBusy=false;
+   var lat=pos.coords.latitude, lon=pos.coords.longitude;
+   applyLocation(lat, lon, lat.toFixed(5)+', '+lon.toFixed(5),
+     '<b>📍 현재 위치</b>', '현재 위치');
  },function(err){
+   emfBusy=false;
    var msg='현재 위치를 가져오지 못했습니다.';
-   if(err&&err.code===1)msg='위치 권한이 거부되었습니다. 브라우저 사이트 설정에서 위치를 허용해 주세요.';
-   else if(err&&err.code===2)msg='현재 위치를 확인할 수 없습니다. 기기의 위치 서비스를 켜 주세요.';
-   else if(err&&err.code===3)msg='위치 확인 시간이 초과되었습니다. 다시 시도해 주세요.';
-   document.getElementById('gpsCurrent').textContent='GPS 확인 실패';alert(msg);
- },{enableHighAccuracy:false,timeout:8000,maximumAge:60000});
+   if(err&&err.code===1) msg='위치 권한이 거부되었습니다. 브라우저 사이트 설정에서 위치를 허용해 주세요.';
+   else if(err&&err.code===2) msg='현재 위치를 확인할 수 없습니다. 기기의 위치 서비스를 켜 주세요.';
+   else if(err&&err.code===3) msg='위치 확인 시간이 초과되었습니다. 다시 시도해 주세요.';
+   document.getElementById('gpsCurrent').textContent='GPS 확인 실패';
+   emfSetError(msg);
+ },{enableHighAccuracy:true,timeout:12000,maximumAge:0});
 }
 function zoomToNearest(){
  if(!nearestLatLng)return;
@@ -443,4 +685,476 @@ if(document.readyState==='loading'){
 }
 window.addEventListener('load',function(){ if(map){ map.invalidateSize(true); } });
 </script>
+
+<script id="emf-compare-script">
+/* =====================================================================
+   위치별 60Hz 자기장 추정 · 지도 오버레이
+     B_line(d)  = 2584 / (d + 41)^2
+     B_total(d) = sqrt( 0.054^2 + B_line^2 )     ← 배경은 계산에만 반영
+   ===================================================================== */
+var EMF_BG=0.054, EMF_LINE_A=2584.0, EMF_LINE_D0=41.0;
+var EMF_LIMIT_UT=83.3, EMF_MEASURED_MAX=100;
+
+function emfLine(d){ return EMF_LINE_A/Math.pow(d+EMF_LINE_D0,2); }
+function emfTotal(d){ var l=emfLine(d); return Math.sqrt(EMF_BG*EMF_BG+l*l); }
+function emfFmt(v){ return v>=1?v.toFixed(2):(v>=0.01?v.toFixed(3):v.toFixed(4)); }
+function emfDist(m){ return m>=1000?(m/1000).toFixed(2)+'km':Math.round(m)+'m'; }
+
+var EMF_APPLIANCES=[
+ ['인체보호기준', 83.3, 'limit', true],
+ ['전기오븐',5.641,'oven'],
+ ['헤어드라이기',3.791,'dryer'],
+ ['전자레인지',2.921,'microwave'],
+ ['가습기',1.954,'humidifier'],
+ ['인덕션쿠커',0.619,'induction'],
+ ['전기장판',0.518,'blanket']
+];
+
+var EMF_ICONS={
+oven:'<svg viewBox="0 0 48 48"><rect x="6" y="5" width="36" height="38" rx="4" fill="#f0f3f7" stroke="#8794a6" stroke-width="2"/><rect x="6" y="5" width="36" height="11" rx="4" fill="#dfe6ee" stroke="#8794a6" stroke-width="2"/><circle cx="13" cy="10.5" r="2" fill="#8794a6"/><circle cx="20" cy="10.5" r="2" fill="#8794a6"/><rect x="11" y="21" width="26" height="17" rx="2.5" fill="#3d2b1f" stroke="#6b7787" stroke-width="2"/><rect x="14" y="24" width="20" height="11" rx="1.5" fill="#ff9a3c" opacity=".85"/><path d="M15 27h18M15 32h18" stroke="#c25b00" stroke-width="1.6" stroke-linecap="round"/><rect x="11" y="17.5" width="26" height="2.5" rx="1.2" fill="#b5c0cd"/></svg>',
+dryer:'<svg viewBox="0 0 48 48"><path d="M31 9a9 9 0 0 0 0 18H18a9 9 0 0 1 0-18z" fill="#a97ede" stroke="#6f3fb0" stroke-width="2" stroke-linejoin="round"/><path d="M22 27v9a3 3 0 0 0 3 3h3" fill="none" stroke="#6f3fb0" stroke-width="2.4" stroke-linecap="round"/><rect x="27" y="36.5" width="9" height="4" rx="2" fill="#6f3fb0"/><circle cx="24" cy="18" r="4" fill="#efe4fb" stroke="#6f3fb0" stroke-width="1.6"/><path d="M36 13h6M36 18h7M36 23h5" stroke="#f0932b" stroke-width="2.2" stroke-linecap="round"/></svg>',
+microwave:'<svg viewBox="0 0 48 48"><rect x="3" y="11" width="42" height="26" rx="3.5" fill="#eef2f7" stroke="#77869a" stroke-width="2"/><rect x="7" y="15" width="24" height="18" rx="2" fill="#2b3a4d" stroke="#5b6b7f" stroke-width="1.8"/><path d="M10 18h18M10 22h18M10 26h18M10 30h18" stroke="#4a6178" stroke-width="1.1"/><circle cx="19" cy="24" r="5" fill="#7fd3e0" opacity=".55"/><rect x="34" y="15" width="8" height="9" rx="1.5" fill="#fff" stroke="#8a97a8" stroke-width="1.5"/><circle cx="38" cy="29.5" r="3" fill="#c9d4e0" stroke="#8a97a8" stroke-width="1.5"/></svg>',
+humidifier:'<svg viewBox="0 0 48 48"><path d="M23 6c0 4-4 5-4 8.5" stroke="#5bb3e8" stroke-width="2.2" stroke-linecap="round" fill="none" opacity=".8"/><path d="M29 8c0 3.2-3.2 4-3.2 6.8" stroke="#5bb3e8" stroke-width="2.2" stroke-linecap="round" fill="none" opacity=".55"/><path d="M18 10c0 2.6-2.6 3.4-2.6 5.4" stroke="#5bb3e8" stroke-width="2.2" stroke-linecap="round" fill="none" opacity=".55"/><path d="M13 18h22v18a5 5 0 0 1-5 5H18a5 5 0 0 1-5-5z" fill="#d8ecf9" stroke="#2f83bd" stroke-width="2" stroke-linejoin="round"/><rect x="16" y="24" width="16" height="11" rx="2" fill="#8fd0f0" opacity=".75"/><rect x="11" y="15.5" width="26" height="3.5" rx="1.7" fill="#2f83bd"/><circle cx="24" cy="38" r="1.6" fill="#2f83bd"/></svg>',
+induction:'<svg viewBox="0 0 48 48"><rect x="3" y="14" width="42" height="21" rx="3.5" fill="#2f3a47" stroke="#1b232c" stroke-width="2"/><rect x="3" y="30" width="42" height="5" rx="2" fill="#454f5d"/><circle cx="16" cy="22" r="7" fill="none" stroke="#e2564a" stroke-width="2.2"/><circle cx="16" cy="22" r="3.4" fill="none" stroke="#e2564a" stroke-width="1.8" opacity=".7"/><circle cx="33" cy="19" r="3.6" fill="none" stroke="#e2564a" stroke-width="2"/><circle cx="33" cy="27" r="2.6" fill="none" stroke="#e2564a" stroke-width="2"/><circle cx="40" cy="32.5" r="1.4" fill="#5ad07a"/></svg>',
+blanket:'<svg viewBox="0 0 48 48"><path d="M5 14h38v18c0 2-1.6 3.5-3.5 3.5H8.5C6.6 35.5 5 34 5 32z" fill="#f6c98a" stroke="#c2670a" stroke-width="2" stroke-linejoin="round"/><path d="M5 14c3-2.4 6-2.4 9 0s6 2.4 9 0 6-2.4 9 0 6 2.4 9 0" fill="none" stroke="#c2670a" stroke-width="2" stroke-linejoin="round"/><path d="M12 21c2 2 2 4.5 0 6.5M20 21c2 2 2 4.5 0 6.5M28 21c2 2 2 4.5 0 6.5M36 21c2 2 2 4.5 0 6.5" fill="none" stroke="#e08b2a" stroke-width="1.8" stroke-linecap="round"/><rect x="18" y="37.5" width="12" height="5" rx="2.5" fill="#fff" stroke="#c2670a" stroke-width="1.8"/><path d="M21.5 40h7" stroke="#c2670a" stroke-width="1.6" stroke-linecap="round"/></svg>'
+,
+limit:'<svg viewBox="0 0 48 48"><path d="M24 5.5 43 39a2.5 2.5 0 0 1-2.2 3.7H7.2A2.5 2.5 0 0 1 5 39z" fill="#ffe9e6" stroke="#c62828" stroke-width="2.4" stroke-linejoin="round"/><path d="M24 17v11" stroke="#c62828" stroke-width="3.2" stroke-linecap="round"/><circle cx="24" cy="35" r="2.1" fill="#c62828"/></svg>'
+};
+
+function emfRatioText(app, site){
+  var r=app/site;
+  if(r>=1.5){ var n=r>=10?Math.round(r):Math.round(r*10)/10; return {main:'1/'+n,sub:n+'분의 1',color:'#0754a6'}; }
+  if(r<=0.67){ var m=(1/r)>=10?Math.round(1/r):Math.round((1/r)*10)/10; return {main:'×'+m,sub:m+'배',color:'#c21f1f'}; }
+  return {main:'≈ 1배',sub:'비슷함',color:'#5a6a7d'};
+}
+
+/* 상태 표시 — 조회 시작/오류를 화면에 드러내서 ‘조용한 실패’를 없앱니다 */
+function emfSetLoading(msg){
+  var v=document.getElementById('emfValueBody');
+  var a=document.getElementById('emfAppBody');
+  if(v) v.innerHTML='<div class="emfLoading">⏳ '+(msg||'위치를 확인하고 있습니다…')+'</div>';
+  if(a) a.innerHTML='<div class="emfIdle">계산 중…</div>';
+}
+function emfSetError(msg){
+  var v=document.getElementById('emfValueBody');
+  var a=document.getElementById('emfAppBody');
+  if(v) v.innerHTML='<div class="emfError">⚠️ '+msg+'</div>';
+  if(a) a.innerHTML='<div class="emfIdle">위치를 다시 조회해 주세요</div>';
+}
+
+function renderEmfCompare(meters, placeLabel){
+  var totalUT=emfTotal(meters);
+  var distTxt=emfDist(meters), beyond=meters>EMF_MEASURED_MAX;
+  var pct=totalUT/EMF_LIMIT_UT*100;
+  var pctTxt=pct<0.01?'0.01% 미만':pct.toFixed(2)+'%';
+  var label=(placeLabel||'현재 위치');
+  if(label.length>18) label=label.slice(0,18)+'…';
+
+  /* ── 우측 하단: 측정될 값 ── */
+  var v=document.getElementById('emfValueBody');
+  if(v) v.innerHTML=
+    '<div class="emfHero"><small>🏠 '+label+'에서 측정될 값</small>'
+    + '<div class="emfVal">'+emfFmt(totalUT)+' µT</div>'
+    + '<div class="emfDist">공개된 경과대역에서 약 '+distTxt+' 거리</div>'
+    + '<div class="emfPct">인체보호기준(83.3 µT) 대비 <b>'+pctTxt+'</b></div></div>';
+
+  /* ── 우측 상단: 가전제품 비교 ── */
+  var a=document.getElementById('emfAppBody');
+  if(a) a.innerHTML='<div class="emfAppGrid">'+EMF_APPLIANCES.map(function(x){
+    var r=emfRatioText(x[1],totalUT);
+    var isLimit = x[3]===true;
+    return '<div class="emfApp'+(isLimit?' emfLimitRow':'')+'">'
+      +'<div class="emfAppIcon">'+(EMF_ICONS[x[2]]||'')+'</div>'
+      +'<div class="emfAppText"><div class="emfAppName">'+x[0]+'</div>'
+      +'<div class="emfAppVal">'+(isLimit?x[1].toFixed(1):x[1].toFixed(3))+' \u00b5T</div></div>'
+      +'<div class="emfAppRatio"><b style="color:'+(isLimit?'#c62828':r.color)+'">'+r.main+'</b>'
+      +'<small>'+r.sub+'</small></div></div>';
+  }).join('')+'</div>';
+
+  /* ── 출처·계산식 (접이식) ── */
+  var srcEl=document.getElementById('emfSourceBody');
+  if(srcEl) srcEl.innerHTML=
+      '<b>계산식</b><br>송전선로 기여분 <code>Bₗ = 2584/(d+41)²</code><br>'
+    + '측정될 값 <code>B = √(0.054² + Bₗ²)</code> (d는 미터)<br>'
+    + '전자파는 거리에 비례해 줄지 않고 <b>거리의 제곱에 반비례</b>해 줄어듭니다. '
+    + '거리 2배 → 4분의 1. 멀어져도 0이 되지 않고 집 배선·가전으로 인한 '
+    + '배경 자기장('+EMF_BG+' µT)으로 수렴합니다.'
+    + '<hr><b>⚠️ 추정치입니다 — 현장 측정값이 아닙니다</b><ul>'
+    + '<li>GPS는 전자파 측정기가 아닙니다.</li>'
+    + (beyond?'<li>한전 측정자료는 100m까지입니다. 그 밖은 위 식으로 늘려 추정한 값입니다.</li>':'')
+    + '<li>실제 값은 전류량, 철탑 높이·구조, 전선 배열, 지형에 따라 달라집니다.</li>'
+    + '<li>배경 0.054 µT는 국내 대규모 실측자료가 없어 국제 연구값을 사용했습니다.</li>'
+    + '<li>경과대역은 <b>확정된 노선이 아니라 후보 범위</b>입니다.</li>'
+    + '<li>노선 확정 후 주민이 요청하면 해당 지점 실측값을 공개하는 것이 원칙입니다.</li></ul>'
+    + '<hr><b>출처</b><br>'
+    + '▸ 송전선로 거리별 측정값: 한국전력공사 공개자료(전국 242개소 345kV 평균)<br>'
+    + '▸ 가전제품 측정값: 국립전파연구원 ‘생활 속 전자파’<br>'
+    + '<a href="https://www.rra.go.kr/emf/index.do" target="_blank" rel="noopener">https://www.rra.go.kr/emf/index.do</a><br>'
+    + '▸ 배경 자기장 0.054 µT: 영국 258가구 측정 · 송전선로 100m 밖 기하평균<br>'
+    + '<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5036708/" target="_blank" rel="noopener">https://pmc.ncbi.nlm.nih.gov/articles/PMC5036708/</a><br>'
+    + '▸ 아이콘은 직접 제작한 SVG로 별도 저작권이 없습니다.';
+}
+
+function updateEmfFromNearest(n, placeLabel){
+  if(!n){ emfSetError('위치를 확인하지 못했습니다.'); return; }
+  var meters=(typeof n.centerKm==='number'?n.centerKm:n.distance)*1000;
+  renderEmfCompare(meters, placeLabel);
+}
+</script>
+
+<!-- ===================== KEPCO 소통 챗봇 시작 ===================== -->
+<style id="kepcoBotStyle">
+.kbLauncher{position:fixed;right:22px;bottom:22px;z-index:9000;width:66px;height:66px;border:0;border-radius:50%;
+  background:linear-gradient(145deg,#1a8fe3,#0754a6);color:#fff;font-size:30px;line-height:1;
+  box-shadow:0 8px 26px rgba(7,84,166,.42);display:grid;place-items:center;transition:.18s}
+.kbLauncher:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 12px 32px rgba(7,84,166,.5)}
+.kbLauncher .kbDot{position:absolute;top:4px;right:4px;width:14px;height:14px;border-radius:50%;background:#ff4d4f;border:2px solid #fff}
+.kbLauncher.hide{display:none}
+
+.kbWin{position:fixed;right:22px;bottom:22px;z-index:9001;width:392px;height:640px;max-height:calc(100vh - 44px);
+  background:#eaf3fc;border-radius:18px;overflow:hidden;display:none;flex-direction:column;
+  box-shadow:0 22px 64px rgba(8,35,70,.34);font-family:system-ui,'Apple SD Gothic Neo','Noto Sans KR',sans-serif}
+.kbWin.open{display:flex}
+
+.kbHead{background:linear-gradient(180deg,#dceaf8,#eaf3fc);padding:16px 18px;display:flex;align-items:center;
+  justify-content:space-between;border-bottom:1px solid #cfe0f0;flex:none}
+.kbHead h3{margin:0;font-size:19px;font-weight:900;color:#12365f}
+.kbHeadBtns{display:flex;gap:6px}
+.kbIcon{border:0;background:transparent;width:34px;height:34px;border-radius:9px;font-size:18px;color:#2a5e93;display:grid;place-items:center}
+.kbIcon:hover{background:#ffffff9c}
+
+.kbBody{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.kbBody::-webkit-scrollbar{width:8px}
+.kbBody::-webkit-scrollbar-thumb{background:#b9cee2;border-radius:8px}
+
+.kbMenuGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.kbMenuItem{background:#fff;border:1px solid #dbe8f4;border-radius:13px;padding:14px 6px;text-align:center;
+  font-size:12.5px;font-weight:800;color:#20456e;line-height:1.35;transition:.15s}
+.kbMenuItem:hover{border-color:#0b74cf;background:#f3f9ff;transform:translateY(-2px)}
+.kbMenuItem span{display:block;font-size:23px;margin-bottom:5px}
+
+.kbTime{text-align:center;font-size:11.5px;color:#7b8ea3;margin:2px 0}
+.kbRow{display:flex;gap:9px;align-items:flex-start}
+.kbRow.user{justify-content:flex-end}
+.kbAvatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(145deg,#4fb0ee,#0b74cf);
+  display:grid;place-items:center;font-size:18px;flex:none}
+.kbName{font-size:12px;font-weight:900;color:#3c5f85;margin-bottom:4px}
+.kbBubble{max-width:80%;padding:12px 14px;border-radius:14px;font-size:14.5px;line-height:1.68;white-space:pre-wrap;word-break:break-word}
+.kbRow.bot .kbBubble{background:#dbeafb;color:#12304f;border-top-left-radius:4px}
+.kbRow.user .kbBubble{background:#0b5fc4;color:#fff;border-top-right-radius:4px}
+.kbBubble b{font-weight:900}
+.kbBubble ul{margin:6px 0;padding-left:19px}
+.kbBubble li{margin:3px 0}
+.kbBubble a{color:#0754a6;text-decoration:underline}
+.kbRow.user .kbBubble a{color:#cfe6ff}
+
+.kbChips{display:flex;flex-wrap:wrap;gap:7px;padding-left:43px}
+.kbChip{border:1px solid #b7d3ee;background:#fff;color:#0754a6;border-radius:20px;padding:7px 13px;font-size:12.5px;font-weight:800}
+.kbChip:hover{background:#0754a6;color:#fff}
+
+.kbTyping{display:flex;gap:4px;padding:14px}
+.kbTyping i{width:7px;height:7px;border-radius:50%;background:#8fb4d6;animation:kbBounce 1.2s infinite}
+.kbTyping i:nth-child(2){animation-delay:.18s}
+.kbTyping i:nth-child(3){animation-delay:.36s}
+@keyframes kbBounce{0%,60%,100%{opacity:.35;transform:translateY(0)}30%{opacity:1;transform:translateY(-5px)}}
+
+.kbFoot{flex:none;background:#fff;border-top:1px solid #d8e5f1;padding:11px 13px;display:flex;gap:9px;align-items:center}
+.kbInput{flex:1;border:1px solid #d3e0ed;border-radius:22px;padding:12px 16px;font-size:14.5px;background:#f7fafd;
+  resize:none;max-height:96px;min-height:44px;line-height:1.5;font-family:inherit}
+.kbInput:focus{outline:2px solid #9ecbf5;background:#fff}
+.kbSend{flex:none;width:44px;height:44px;border:0;border-radius:50%;background:#0b5fc4;color:#fff;font-size:18px;display:grid;place-items:center}
+.kbSend:disabled{background:#b6c8d9}
+
+.kbWarn{background:#fff4f4;border:1px solid #f3c7c7;color:#9d1c1c;border-radius:11px;padding:12px 14px;font-size:13px;line-height:1.6}
+.kbNote{font-size:11.5px;color:#7b8ea3;text-align:center;padding:0 14px 9px}
+
+@media(max-width:520px){
+  .kbWin{right:0;bottom:0;width:100%;height:100%;max-height:100%;border-radius:0}
+  .kbLauncher{right:16px;bottom:16px;width:58px;height:58px;font-size:26px}
+}
+</style>
+
+<button class="kbLauncher" id="kbLauncher" onclick="kbOpen()" aria-label="한전 소통 챗봇 열기">
+  🤖<span class="kbDot"></span>
+</button>
+
+<div class="kbWin" id="kbWin" role="dialog" aria-label="한전 소통 챗봇">
+  <div class="kbHead">
+    <h3>한전 소통 도우미</h3>
+    <div class="kbHeadBtns">
+      <button class="kbIcon" onclick="kbReset()" title="처음으로">🏠</button>
+      <button class="kbIcon" onclick="kbInfo()" title="안내">ⓘ</button>
+      <button class="kbIcon" onclick="kbClose()" title="닫기">✕</button>
+    </div>
+  </div>
+
+  <div class="kbBody" id="kbBody"></div>
+
+  <div class="kbFoot">
+    <textarea class="kbInput" id="kbInput" rows="1" placeholder="무엇을 도와드릴까요?"
+      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();kbSend();}"
+      oninput="kbAutoGrow(this)"></textarea>
+    <button class="kbSend" id="kbSendBtn" onclick="kbSend()" aria-label="전송">➤</button>
+  </div>
+  <div class="kbNote">AI가 생성한 답변으로 실제와 다를 수 있습니다. 정확한 내용은 한전(123)에 확인하세요.</div>
+</div>
+
+<script id="kepcoBotScript">
+/* ============================================================
+   설정 — 여기만 고치면 됩니다
+   ------------------------------------------------------------
+   [A안] 키를 직접 넣기 (간편 / 키 노출됨)
+         API_KEY 에 발급받은 키를 넣고, PROXY_URL 은 "" 로 둡니다.
+
+   [B안] 프록시 쓰기 (안전 / 권장)
+         PROXY_URL 에 Cloudflare Worker 주소를 넣습니다.
+         이때 API_KEY 는 비워두세요.
+   ============================================================ */
+const KB_CONFIG = {
+  API_KEY  : "AQ.Ab8RN6KFnagLSkZQpq7I9w8kUbRmr-GrGnKacPtESRcNeExPIA",                       // 예: "AIzaSy...."
+  PROXY_URL: "",                       // 예: "https://kepco-bot.내계정.workers.dev"
+  MODEL    : "gemini-2.5-flash"        // 오류 나면 "gemini-2.0-flash" 로 변경
+};
+
+/* ---------- 챗봇 성격·지식 ---------- */
+const KB_SYSTEM = `당신은 한국전력공사(KEPCO)의 주민 소통 도우미 "소통이"입니다.
+345kV 신계룡~북천안 송전선로 건설사업 지역주민에게 설비 공사와 보상을 안내합니다.
+
+[말투]
+- 존댓말, 따뜻하고 차분하게. 주민을 안심시키되 사실을 숨기지 않습니다.
+- 답변은 5문장 이내로 짧게. 필요하면 짧은 목록을 씁니다.
+- 전문용어(경과대역, 입지선정위원회 등)는 한 줄로 쉽게 풀어 설명합니다.
+
+[사업 기본정보]
+- 노선: 신계룡변전소 → 대전(유성구·서구) → 공주·세종 → 청주 → 천안 동면 북천안변전소
+- 전압: 345kV, 공개된 최적경과대역은 32개 읍·면·동
+- 현재 단계: 최적경과대역 공개 단계이며 최종 노선은 확정되지 않았습니다.
+
+[보상 안내 — 송·변전설비 주변지역의 보상 및 지원에 관한 법률]
+1. 재산적 보상: 송전선로 양측 가장 바깥선으로부터 345kV는 33m 이내 토지가 대상입니다.
+   토지소유자가 한전에 청구하며, 감정평가를 거쳐 지급됩니다.
+2. 주택매수 청구: 345kV 기준 선로 양측 60m 이내 주택은 소유자가 매수를 청구할 수 있습니다.
+3. 지역지원사업: 주변지역 마을에 소득증대·복지·육영사업 등을 지원합니다.
+4. 지원금 신청·문의는 관할 한전 지역본부 또는 국번없이 123.
+
+[전자파]
+- 인체보호기준은 83.3 µT(마이크로테슬라)입니다.
+- 송전선로 아래에서도 통상 기준치를 크게 밑돌며, 거리가 멀어질수록 급격히 낮아집니다.
+- 가정용 전기장판·헤어드라이기 등 가전제품 근처 값과 비교해 설명하면 이해가 쉽습니다.
+- 이 사이트의 "우리 집 영향 확인" 지도에서 위치별 추정값을 볼 수 있다고 안내하세요.
+
+[반드시 지킬 것]
+- 확정되지 않은 노선·보상금액·공사일정을 단정하지 마세요. "아직 확정 전"이라고 명확히 말합니다.
+- 모르는 것은 모른다고 하고 123 또는 관할 지역본부 문의를 안내합니다.
+- 주민이 불안·불만을 표현하면 먼저 그 마음을 인정한 뒤 정보를 제공합니다.
+- 정치적 논쟁, 사업과 무관한 질문에는 정중히 범위를 벗어난다고 답합니다.`;
+
+/* ---------- 빠른 메뉴 ---------- */
+const KB_MENU = [
+  { icon:"🏗️", label:"공사 절차",   q:"송전선로 건설은 어떤 절차로 진행되나요?" },
+  { icon:"💰", label:"보상 안내",   q:"우리 집이 보상 대상인지 어떻게 확인하나요?" },
+  { icon:"🏠", label:"주택 매수",   q:"주택 매수청구는 어떤 조건에서 가능한가요?" },
+  { icon:"📡", label:"전자파",     q:"송전선로 전자파가 몸에 해롭지 않나요?" },
+  { icon:"🗺️", label:"노선 확인",   q:"우리 동네가 노선에 포함되는지 어떻게 보나요?" },
+  { icon:"📞", label:"문의처",     q:"직접 문의하려면 어디로 연락해야 하나요?" }
+];
+
+let kbHistory = [];
+let kbBusy = false;
+
+/* ---------- 화면 제어 ---------- */
+function kbOpen(){
+  document.getElementById('kbWin').classList.add('open');
+  document.getElementById('kbLauncher').classList.add('hide');
+  if(!kbHistory.length) kbReset();
+  setTimeout(()=>document.getElementById('kbInput').focus(),160);
+}
+function kbClose(){
+  document.getElementById('kbWin').classList.remove('open');
+  document.getElementById('kbLauncher').classList.remove('hide');
+}
+function kbTimeStr(){
+  const d=new Date(), h=d.getHours();
+  return (h<12?'오전 ':'오후 ')+String(h%12||12).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+}
+function kbAutoGrow(el){ el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,96)+'px'; }
+function kbScroll(){ const b=document.getElementById('kbBody'); b.scrollTop=b.scrollHeight; }
+
+/* ---------- 메시지 렌더 ---------- */
+function kbEscape(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function kbFormat(t){
+  let h = kbEscape(t);
+  h = h.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+  h = h.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
+  return h;
+}
+function kbAddUser(text){
+  const b=document.getElementById('kbBody');
+  b.insertAdjacentHTML('beforeend',
+    `<div class="kbRow user"><div class="kbBubble">${kbEscape(text)}</div></div>
+     <div class="kbTime">${kbTimeStr()}</div>`);
+  kbScroll();
+}
+function kbAddBot(html, isRaw){
+  const b=document.getElementById('kbBody');
+  b.insertAdjacentHTML('beforeend',
+    `<div class="kbRow bot"><div class="kbAvatar">🤖</div>
+       <div style="max-width:82%"><div class="kbName">소통이</div>
+       <div class="kbBubble">${isRaw?html:kbFormat(html)}</div></div></div>
+     <div class="kbTime">${kbTimeStr()}</div>`);
+  kbScroll();
+}
+function kbAddChips(list){
+  const b=document.getElementById('kbBody');
+  b.insertAdjacentHTML('beforeend',
+    `<div class="kbChips">${list.map(q=>`<button class="kbChip" onclick="kbAsk('${q.replace(/'/g,"\\'")}')">${q}</button>`).join('')}</div>`);
+  kbScroll();
+}
+function kbTypingOn(){
+  const b=document.getElementById('kbBody');
+  b.insertAdjacentHTML('beforeend',
+    `<div class="kbRow bot" id="kbTypingRow"><div class="kbAvatar">🤖</div>
+       <div class="kbBubble" style="padding:0"><div class="kbTyping"><i></i><i></i><i></i></div></div></div>`);
+  kbScroll();
+}
+function kbTypingOff(){ const r=document.getElementById('kbTypingRow'); if(r) r.remove(); }
+
+/* ---------- 초기 화면 ---------- */
+function kbReset(){
+  kbHistory = [];
+  const b=document.getElementById('kbBody');
+  b.innerHTML = `<div class="kbMenuGrid">${
+    KB_MENU.map((m,i)=>`<button class="kbMenuItem" onclick="kbAsk(KB_MENU[${i}].q)">
+      <span>${m.icon}</span>${m.label}</button>`).join('')
+  }</div>`;
+  b.insertAdjacentHTML('beforeend',`<div class="kbTime">${kbTimeStr()}</div>`);
+  kbAddBot('안녕하세요, 한전 소통 도우미 <b>소통이</b>입니다. 🙂<br>신계룡~북천안 송전선로 공사와 보상에 대해 궁금하신 점을 편하게 물어보세요.', true);
+
+  if(!KB_CONFIG.API_KEY && !KB_CONFIG.PROXY_URL){
+    b.insertAdjacentHTML('beforeend',
+      `<div class="kbWarn"><b>⚙️ 설정이 필요합니다</b><br>
+       HTML 파일에서 <code>KB_CONFIG</code>의 <code>API_KEY</code> 또는 <code>PROXY_URL</code>을 입력해 주세요.</div>`);
+    kbScroll();
+  }
+}
+function kbInfo(){
+  kbAddBot('이 챗봇은 <b>Google Gemini</b>로 동작하는 안내 도우미입니다.<br><br>' +
+    '• 공개된 사업정보와 관련 법령을 바탕으로 답변합니다<br>' +
+    '• 최종 노선·보상금액은 아직 확정 전입니다<br>' +
+    '• 공식 확인은 한전 <b>국번없이 123</b>', true);
+}
+
+/* ---------- 전송 ---------- */
+function kbAsk(q){
+  const i=document.getElementById('kbInput');
+  i.value=q; kbSend();
+}
+function kbSend(){
+  if(kbBusy) return;
+  const input=document.getElementById('kbInput');
+  const text=input.value.trim();
+  if(!text) return;
+  input.value=''; kbAutoGrow(input);
+  kbAddUser(text);
+  kbCall(text);
+}
+
+
+/* ---------- 오류 원인 진단 (발표 전 점검용) ---------- */
+function kbDiagnose(e){
+  const s = e.httpStatus;
+  const raw = String(e.message || e);
+  let cause = '', fix = '';
+
+  if(!s){
+    cause = '서버에 연결 자체가 안 됐습니다';
+    fix = location.protocol === 'file:'
+      ? '지금 <b>파일을 직접 열어(file://)</b> 보고 계십니다. 이 방식은 차단됩니다.<br>'
+        + 'GitHub Pages에 올린 주소로 접속하거나, 폴더에서 터미널을 열고 '
+        + '<code>python3 -m http.server</code> 실행 후 <code>localhost:8000</code>으로 들어가세요.'
+      : '인터넷 연결 또는 방화벽을 확인해 주세요.';
+  } else if(s === 400){
+    cause = 'API 키가 올바르지 않습니다 (400)';
+    fix = 'KB_CONFIG의 <code>API_KEY</code>에 따옴표·공백이 섞이지 않았는지 확인하세요.';
+  } else if(s === 403){
+    cause = '키가 이 주소에서 거부됐습니다 (403)';
+    fix = 'Google Cloud Console → 사용자 인증 정보 → 해당 키 → <b>HTTP 리퍼러</b> 목록에 '
+        + '<code>' + location.origin + '/*</code> 를 추가하세요.<br>'
+        + '급하면 제한을 잠시 <b>없음</b>으로 두고 테스트해 보세요.';
+  } else if(s === 404){
+    cause = '모델을 찾을 수 없습니다 (404)';
+    fix = 'KB_CONFIG의 <code>MODEL</code>을 <code>gemini-2.0-flash</code> 로 바꿔보세요.';
+  } else if(s === 429){
+    cause = '무료 사용량을 초과했습니다 (429)';
+    fix = '1~2분 뒤 다시 시도해 주세요.';
+  } else {
+    cause = '오류가 발생했습니다 (' + s + ')';
+    fix = '아래 원문을 확인해 주세요.';
+  }
+
+  return '<b>⚠️ ' + cause + '</b><br>' + fix
+    + '<div style="margin-top:9px;padding:8px;background:#fff;border-radius:8px;'
+    + 'font-size:11.5px;color:#7b8ea3;word-break:break-all;max-height:120px;overflow:auto">'
+    + kbEscape(raw) + '</div>';
+}
+
+async function kbCall(text){
+  if(!KB_CONFIG.API_KEY && !KB_CONFIG.PROXY_URL){
+    kbAddBot('먼저 HTML 파일에서 API 설정을 완료해 주세요.');
+    return;
+  }
+  kbBusy=true;
+  document.getElementById('kbSendBtn').disabled=true;
+  kbTypingOn();
+
+  kbHistory.push({ role:'user', parts:[{text}] });
+  if(kbHistory.length>16) kbHistory=kbHistory.slice(-16);   // 최근 8턴만 유지
+
+  const url = KB_CONFIG.PROXY_URL
+    ? KB_CONFIG.PROXY_URL
+    : `https://generativelanguage.googleapis.com/v1beta/models/${KB_CONFIG.MODEL}:generateContent?key=${KB_CONFIG.API_KEY}`;
+
+  try{
+    const res = await fetch(url,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        system_instruction:{ parts:[{ text: KB_SYSTEM }] },
+        contents: kbHistory,
+        generationConfig:{ temperature:0.6, maxOutputTokens:700 }
+      })
+    });
+
+    if(!res.ok){
+      const errTxt = await res.text();
+      const err = new Error(errTxt.slice(0,300));
+      err.httpStatus = res.status;
+      throw err;
+    }
+
+    const data = await res.json();
+    const reply = (data?.candidates?.[0]?.content?.parts || [])
+      .map(p=>p.text || '').join('').trim();
+
+    kbTypingOff();
+    if(reply){
+      kbAddBot(reply);
+      kbHistory.push({ role:'model', parts:[{text:reply}] });
+      kbAddChips(['보상 대상 확인','전자파 수치는?','앞으로 일정은?']);
+    }else{
+      kbAddBot('답변을 만들지 못했습니다. 질문을 조금 바꿔서 다시 물어봐 주시겠어요?');
+    }
+  }catch(e){
+    kbTypingOff();
+    kbAddBot(kbDiagnose(e), true);
+    console.error('[KEPCO Bot]', e);
+  }finally{
+    kbBusy=false;
+    document.getElementById('kbSendBtn').disabled=false;
+    document.getElementById('kbInput').focus();
+  }
+}
+</script>
+<!-- ===================== KEPCO 소통 챗봇 끝 ===================== -->
+
 </body></html>
